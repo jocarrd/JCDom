@@ -1,22 +1,31 @@
 /** @jsx JCDoom */
 
-export function JCDom(type, props, ...args) {
-  const children = [].concat(args);
+//Wrapper
+export const JCDomRender = (children) => {
+  return render(createElement(children));
+};
 
-  return createElement({
+export function JCDom(type, props, ...args) {
+  const children = args.length ? [].concat(...args) : null;
+
+  return {
     type,
-    props,
+    props: props,
     children,
-  });
+  };
 }
 
 //Before auto-calling JCDom
-export function createElement(node) {
-  if (typeof node === "string") {
+function createElement(node) {
+  console.log(node.type);
+  if (typeof node === "string" || typeof node === "number") {
     return document.createTextNode(node);
   }
   if (typeof node.type === "object") {
     return createElement(node.type);
+  }
+  if (typeof node.type === "function") {
+    return createElement(node.type(node.props));
   }
 
   const element = document.createElement(node.type);
@@ -31,11 +40,13 @@ export function createElement(node) {
   return element;
 }
 
-export function render(node) {
-  window.document.body.appendChild(node);
+function render(node) {
+  node && window.document.getElementById("root").appendChild(node);
 }
 
-export function setAtributes(node, props) {
+function setAtributes(node, props) {
+  if (!props) return;
+
   Object.entries(props).forEach((prop) => {
     node.setAttribute(prop[0], prop[1]);
   });

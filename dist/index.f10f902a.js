@@ -533,39 +533,41 @@ function hmrAcceptRun(bundle, id) {
 
 },{}],"eoHF7":[function(require,module,exports) {
 /** @jsx JCDom */ var _src = require("../src");
-const c = (0, _src.JCDom)("h1", {
-    style: "color: red"
-}, "Prueba");
-(0, _src.render)(c);
+var _app = require("./App");
+(0, _src.JCDomRender)((0, _src.JCDom)((0, _app.App), null));
 
-},{"../src":"8lqZg"}],"8lqZg":[function(require,module,exports) {
+},{"../src":"8lqZg","./App":"3jZyd"}],"8lqZg":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
-/** @jsx JCDoom */ parcelHelpers.export(exports, "JCDom", ()=>JCDom);
-//Before auto-calling JCDom
-parcelHelpers.export(exports, "createElement", ()=>createElement);
-parcelHelpers.export(exports, "render", ()=>render);
-parcelHelpers.export(exports, "setAtributes", ()=>setAtributes);
+parcelHelpers.export(exports, "JCDomRender", ()=>JCDomRender);
+parcelHelpers.export(exports, "JCDom", ()=>JCDom);
+const JCDomRender = (children)=>{
+    return render(createElement(children));
+};
 function JCDom(type, props, ...args) {
-    const children = [].concat(args);
-    return createElement({
+    const children = args.length ? [].concat(...args) : null;
+    return {
         type,
-        props,
+        props: props,
         children
-    });
+    };
 }
+//Before auto-calling JCDom
 function createElement(node) {
-    if (typeof node === "string") return document.createTextNode(node);
+    console.log(node.type);
+    if (typeof node === "string" || typeof node === "number") return document.createTextNode(node);
     if (typeof node.type === "object") return createElement(node.type);
+    if (typeof node.type === "function") return createElement(node.type(node.props));
     const element = document.createElement(node.type);
     node.props && setAtributes(element, node.props);
     node.children && node.children.map(createElement).forEach((child)=>element.appendChild(child));
     return element;
 }
 function render(node) {
-    window.document.body.appendChild(node);
+    node && window.document.getElementById("root").appendChild(node);
 }
 function setAtributes(node, props) {
+    if (!props) return;
     Object.entries(props).forEach((prop)=>{
         node.setAttribute(prop[0], prop[1]);
     });
@@ -601,6 +603,17 @@ exports.export = function(dest, destName, get) {
     });
 };
 
-},{}]},["ap5xe","eoHF7"], "eoHF7", "parcelRequireef2d")
+},{}],"3jZyd":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "App", ()=>App);
+/** @jsx JCDom */ var _src = require("../src");
+function App() {
+    return (0, _src.JCDom)("h1", {
+        style: "color: red"
+    }, "Prueba");
+}
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","../src":"8lqZg"}]},["ap5xe","eoHF7"], "eoHF7", "parcelRequireef2d")
 
 //# sourceMappingURL=index.f10f902a.js.map
