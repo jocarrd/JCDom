@@ -1,5 +1,7 @@
 /** @jsx JCDom */
 
-import { JCDom } from "../src";
+import { JCDom, render, createElement } from "../src";
 
-const c = <h1>Prueba</h1>;
+const c = <h1 style="color: red">Prueba</h1>;
+
+render(c);

@@ -533,19 +533,42 @@ function hmrAcceptRun(bundle, id) {
 
 },{}],"eoHF7":[function(require,module,exports) {
 /** @jsx JCDom */ var _src = require("../src");
-const c = (0, _src.JCDom)("h1", null, "Prueba");
+const c = (0, _src.JCDom)("h1", {
+    style: "color: red"
+}, "Prueba");
+(0, _src.render)(c);
 
 },{"../src":"8lqZg"}],"8lqZg":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 /** @jsx JCDoom */ parcelHelpers.export(exports, "JCDom", ()=>JCDom);
+//Before auto-calling JCDom
+parcelHelpers.export(exports, "createElement", ()=>createElement);
+parcelHelpers.export(exports, "render", ()=>render);
+parcelHelpers.export(exports, "setAtributes", ()=>setAtributes);
 function JCDom(type, props, ...args) {
-    const childreen = [].concat(args);
-    return {
+    const children = [].concat(args);
+    return createElement({
         type,
         props,
-        childreen
-    };
+        children
+    });
+}
+function createElement(node) {
+    if (typeof node === "string") return document.createTextNode(node);
+    if (typeof node.type === "object") return createElement(node.type);
+    const element = document.createElement(node.type);
+    node.props && setAtributes(element, node.props);
+    node.children && node.children.map(createElement).forEach((child)=>element.appendChild(child));
+    return element;
+}
+function render(node) {
+    window.document.body.appendChild(node);
+}
+function setAtributes(node, props) {
+    Object.entries(props).forEach((prop)=>{
+        node.setAttribute(prop[0], prop[1]);
+    });
 }
 
 },{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"gkKU3":[function(require,module,exports) {
