@@ -6,18 +6,19 @@ export const JCDomRender = (children) => {
 };
 
 export function JCDom(type, props, ...args) {
-  const children = args.length ? [].concat(...args) : null;
+  const children = args.length
+    ? [].concat(args.filter((arg) => (!!arg ? arg : "")))
+    : null;
 
   return {
     type,
-    props: props,
+    props: props || {},
     children,
   };
 }
 
 //Before auto-calling JCDom
 function createElement(node) {
-  console.log(node.type);
   if (typeof node === "string" || typeof node === "number") {
     return document.createTextNode(node);
   }
@@ -30,7 +31,8 @@ function createElement(node) {
 
   const element = document.createElement(node.type);
 
-  node.props && setAtributes(element, node.props);
+  setAtributes(element, node.props);
+  setEvents(element, node.props);
 
   node.children &&
     node.children
@@ -47,7 +49,27 @@ function render(node) {
 function setAtributes(node, props) {
   if (!props) return;
 
-  Object.entries(props).forEach((prop) => {
-    node.setAttribute(prop[0], prop[1]);
-  });
+  Object.entries(props)
+    .filter((prop) => !isEvent(prop[0]))
+    .forEach((prop) => {
+      node.setAttribute(prop[0], prop[1]);
+    });
+}
+
+function setEvents(node, props) {
+  if (!props) return;
+  Object.keys(props)
+    .filter(isEvent)
+    .forEach((event) => {
+      console.log(props[event]);
+      node.addEventListener(extractEventName(event), props[event]);
+    });
+}
+
+function isEvent(name) {
+  return /on/.test(name);
+}
+
+function extractEventName(name) {
+  return name.slice(2).toLowerCase();
 }

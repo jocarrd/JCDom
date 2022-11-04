@@ -1,7 +1,7 @@
 {
   "name": "jcdom",
   "version": "1.0.0",
-  "description": "",
+  "description": "A small library that simulates the behavior of others Virtual Dom like React or Preact",
   "main": "index.js",
   "scripts": {
     "dev": "parcel examples/index.html",
