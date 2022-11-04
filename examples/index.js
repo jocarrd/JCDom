@@ -3,4 +3,4 @@
 import { JCDom, JCDomRender } from "../src";
 import { App } from "./App";
 
-JCDomRender(<App />);
+JCDomRender(<App text="prueba" />);
