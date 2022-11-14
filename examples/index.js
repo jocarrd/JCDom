@@ -1,6 +1,8 @@
 /** @jsx JCDom */
 
-import { JCDom, JCDomRender } from "../src";
+import { createRoot, JCDom } from "../src";
 import { App } from "./App";
 
-JCDomRender(<App text="prueba" />);
+const container = document.getElementById("root");
+const root = createRoot(container);
+root.render(<App text="prueba" />);
