@@ -1,9 +1,15 @@
 /** @jsx JCDoom */
+let ROOT = {};
+Object.assign(ROOT, { render });
 
-//Wrapper
-export const JCDomRender = (children) => {
-  return render(createElement(children));
-};
+export function createRoot(container) {
+  ROOT.root = container;
+  return ROOT;
+}
+
+function render(node) {
+  window.document.getElementById(ROOT.root.id).appendChild(createElement(node));
+}
 
 export function JCDom(type, props, ...args) {
   const children = args.length
@@ -42,10 +48,6 @@ function createElement(node) {
   return element;
 }
 
-function render(node) {
-  node && window.document.getElementById("root").appendChild(node);
-}
-
 function setAtributes(node, props) {
   if (!props) return;
 
@@ -61,7 +63,6 @@ function setEvents(node, props) {
   Object.keys(props)
     .filter(isEvent)
     .forEach((event) => {
-      console.log(props[event]);
       node.addEventListener(extractEventName(event), props[event]);
     });
 }
