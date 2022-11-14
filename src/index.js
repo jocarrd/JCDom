@@ -4,11 +4,15 @@ Object.assign(ROOT, { render });
 
 export function createRoot(container) {
   ROOT.root = container;
+  if (!container && !container?.id) throw "Root must have id";
   return ROOT;
 }
 
 function render(node) {
-  window.document.getElementById(ROOT.root.id).appendChild(createElement(node));
+  const root = window.document.getElementById(ROOT.root.id);
+  if (!root) throw "Root must be in HTML file";
+
+  root.appendChild(createElement(node));
 }
 
 export function JCDom(type, props, ...args) {
